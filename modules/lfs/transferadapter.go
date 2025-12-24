@@ -4,6 +4,7 @@
 package lfs
 
 import (
+	"os"
 	"bytes"
 	"context"
 	"io"
@@ -34,6 +35,8 @@ func (a *BasicTransferAdapter) Name() string {
 // Download reads the download location and downloads the data.
 func (a *BasicTransferAdapter) Download(ctx context.Context, l *Link) (io.ReadCloser, error) {
 	req, err := createRequest(ctx, http.MethodGet, l.Href, l.Header, nil)
+	req.Header.Set("Accept", "application/vnd.git-lfs")
+  req.Header.Set("Authorization", "Bearer " + os.Getenv("TOKEN"))
 	if err != nil {
 		return nil, err
 	}
